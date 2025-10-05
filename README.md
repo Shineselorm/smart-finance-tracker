@@ -42,6 +42,3 @@ Then visit `/admin/` to manage Categories, Transactions, and Budgets.
 ## Project Structure
 - `templates/` – base layout and home page
 - `static/` – CSS/JS static assets
-
-## License
-MIT

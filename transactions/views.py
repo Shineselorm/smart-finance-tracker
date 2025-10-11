@@ -8,7 +8,12 @@ from .forms import TransactionForm, CategoryForm, BudgetForm
 
 
 def home(request):
-    return render(request, 'index.html')
+    if request.user.is_authenticated:
+        # Authenticated users see dashboard
+        return render(request, 'index.html')
+    else:
+        # Non-authenticated users see landing page
+        return render(request, 'landing.html')
 
 
 @login_required

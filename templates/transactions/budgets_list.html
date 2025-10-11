@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Budgets</h2>
+    <a href="{% url 'budget_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add Budget
+    </a>
+</div>
+
+{% if budget_data %}
+    <div class="row">
+        {% for data in budget_data %}
+            <div class="col-md-6 mb-4">
+                <div class="card {% if data.over_budget %}border-danger{% endif %}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="card-title mb-0">{{ data.budget.category.name }}</h5>
+                            <span class="badge bg-secondary">{{ data.budget.get_period_display }}</span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>Spent: ${{ data.spent|floatformat:2 }}</span>
+                                <span>Limit: ${{ data.budget.limit_amount|floatformat:2 }}</span>
+                            </div>
+                            <div class="progress" style="height: 25px;">
+                                <div class="progress-bar {% if data.over_budget %}bg-danger{% elif data.percentage > 80 %}bg-warning{% else %}bg-success{% endif %}" 
+                                     role="progressbar" 
+                                     style="width: {{ data.percentage }}%;" 
+                                     aria-valuenow="{{ data.percentage }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                    {{ data.percentage|floatformat:0 }}%
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                {% if data.over_budget %}
+                                    <span class="text-danger">⚠️ Over budget by ${{ data.remaining|floatformat:2|cut:"-" }}</span>
+                                {% else %}
+                                    <span class="text-success">Remaining: ${{ data.remaining|floatformat:2 }}</span>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <a href="{% url 'budget_update' data.budget.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="{% url 'budget_delete' data.budget.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info text-center">
+        No budgets set yet. <a href="{% url 'budget_create' %}">Create your first budget</a>
+    </div>
+{% endif %}
+{% endblock %}
+

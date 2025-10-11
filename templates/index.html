@@ -1,11 +1,45 @@
 {% extends 'base.html' %}
-{% block title %}Home - Smart Finance Tracker{% endblock %}
+{% load static %}
+
 {% block content %}
-<div class="container">
-  <h2 class="mb-3">Dashboard (Placeholder)</h2>
-  <p>Welcome! Use the navigation bar to explore Transactions, Budgets, Insights, and Reads.</p>
-  <p class="text-muted">This page will later show charts and summaries.</p>
-  <a class="btn btn-primary" href="/transactions">Go to Transactions</a>
+<div class="p-5 mb-4 bg-light rounded-3">
+  <div class="container-fluid py-5">
+    <h1 class="display-5 fw-bold">Welcome to Smart Personal Finance Tracker</h1>
+    <p class="col-md-8 fs-5">Track your income and expenses, set budgets, and get insights to improve your financial health.</p>
+    {% if user.is_authenticated %}
+      <a class="btn btn-primary btn-lg" href="{% url 'transactions_list' %}">View Transactions</a>
+    {% else %}
+      <a class="btn btn-primary btn-lg" href="{% url 'signup' %}">Get Started</a>
+      <a class="btn btn-outline-primary btn-lg ms-2" href="{% url 'login' %}">Login</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">💰 Transactions</h5>
+        <p class="card-text">Add, edit, and view your income and expenses with detailed categorization.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">📊 Budgets</h5>
+        <p class="card-text">Set spending limits by category and track your budget progress.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">📈 Insights</h5>
+        <p class="card-text">Get predictions, alerts, and smart recommendations.</p>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
 

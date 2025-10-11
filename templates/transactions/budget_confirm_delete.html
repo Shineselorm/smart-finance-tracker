@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="card-title mb-4 text-danger">Delete Budget</h3>
+                <p>Are you sure you want to delete this budget?</p>
+                
+                <div class="alert alert-warning text-start">
+                    <strong>Budget Details:</strong><br>
+                    Category: {{ budget.category.name }}<br>
+                    Limit: ${{ budget.limit_amount }}<br>
+                    Period: {{ budget.get_period_display }}
+                </div>
+                
+                <form method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    <a href="{% url 'budgets_list' %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

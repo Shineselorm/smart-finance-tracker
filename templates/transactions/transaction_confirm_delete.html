@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="card-title mb-4 text-danger">Delete Transaction</h3>
+                <p>Are you sure you want to delete this transaction?</p>
+                
+                <div class="alert alert-warning text-start">
+                    <strong>Transaction Details:</strong><br>
+                    Category: {{ transaction.category.name }}<br>
+                    Type: {{ transaction.get_type_display }}<br>
+                    Amount: ${{ transaction.amount }}<br>
+                    Date: {{ transaction.date|date:"M d, Y" }}<br>
+                    {% if transaction.note %}Note: {{ transaction.note }}{% endif %}
+                </div>
+                
+                <form method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    <a href="{% url 'transactions_list' %}" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

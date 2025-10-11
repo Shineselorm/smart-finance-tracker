@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <h2 class="mb-4">User Profile</h2>
+        
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Account Information</h5>
+                <hr>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Username:</strong></div>
+                    <div class="col-md-8">{{ user.username }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Email:</strong></div>
+                    <div class="col-md-8">{{ user.email }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Date Joined:</strong></div>
+                    <div class="col-md-8">{{ user.date_joined|date:"F d, Y" }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Last Login:</strong></div>
+                    <div class="col-md-8">{{ user.last_login|date:"F d, Y g:i A" }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card shadow">
+            <div class="card-body">
+                <h5 class="card-title">Account Settings</h5>
+                <hr>
+                <a href="{% url 'password_change' %}" class="btn btn-warning">
+                    <i class="bi bi-key"></i> Change Password
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

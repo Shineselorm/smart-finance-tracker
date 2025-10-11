@@ -1,46 +1,47 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block page_title %}Transactions{% endblock %}
+
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Transactions</h2>
-    <a href="{% url 'transaction_create' %}" class="btn btn-primary">
-        <i class="bi bi-plus-circle"></i> Add Transaction
-    </a>
-</div>
-
 <!-- Summary Cards -->
-<div class="row mb-4">
+<div class="row g-4 mb-4">
     <div class="col-md-4">
-        <div class="card bg-success text-white">
-            <div class="card-body">
-                <h6 class="card-title">Total Income</h6>
-                <h3>${{ total_income|floatformat:2 }}</h3>
+        <div class="stat-card bg-success text-white">
+            <div class="stat-label" style="color: rgba(255, 255, 255, 0.9);">Total Income</div>
+            <div class="stat-value text-white">${{ total_income|floatformat:2 }}</div>
+            <div class="d-flex align-items-center gap-1 mt-2" style="font-size: 14px; opacity: 0.9;">
+                <i data-lucide="trending-up" style="width: 16px; height: 16px;"></i>
+                <span>All time</span>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card bg-danger text-white">
-            <div class="card-body">
-                <h6 class="card-title">Total Expenses</h6>
-                <h3>${{ total_expense|floatformat:2 }}</h3>
+        <div class="stat-card" style="background: var(--error); color: white;">
+            <div class="stat-label" style="color: rgba(255, 255, 255, 0.9);">Total Expenses</div>
+            <div class="stat-value text-white">${{ total_expense|floatformat:2 }}</div>
+            <div class="d-flex align-items-center gap-1 mt-2" style="font-size: 14px; opacity: 0.9;">
+                <i data-lucide="trending-down" style="width: 16px; height: 16px;"></i>
+                <span>All time</span>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card {% if balance >= 0 %}bg-primary{% else %}bg-warning{% endif %} text-white">
-            <div class="card-body">
-                <h6 class="card-title">Balance</h6>
-                <h3>${{ balance|floatformat:2 }}</h3>
+        <div class="stat-card" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white;">
+            <div class="stat-label" style="color: rgba(255, 255, 255, 0.9);">Net Balance</div>
+            <div class="stat-value text-white">${{ balance|floatformat:2 }}</div>
+            <div class="d-flex align-items-center gap-1 mt-2" style="font-size: 14px; opacity: 0.9;">
+                <i data-lucide="wallet" style="width: 16px; height: 16px;"></i>
+                <span>Current balance</span>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Filters -->
+<!-- Filters & Add Button -->
 <div class="card mb-4">
     <div class="card-body">
-        <form method="get" class="row g-3">
+        <form method="get" class="row g-3 align-items-end">
             <div class="col-md-3">
                 <label class="form-label">Category</label>
                 <select name="category" class="form-select">
@@ -60,16 +61,25 @@
                     <option value="expense" {% if type_filter == "expense" %}selected{% endif %}>Expense</option>
                 </select>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label class="form-label">From Date</label>
                 <input type="date" name="date_from" value="{{ date_from }}" class="form-control">
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label class="form-label">To Date</label>
                 <input type="date" name="date_to" value="{{ date_to }}" class="form-control">
             </div>
-            <div class="col-md-1 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary w-100">Filter</button>
+            <div class="col-md-3">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary flex-fill">
+                        <i data-lucide="filter" style="width: 16px; height: 16px;"></i>
+                        Filter
+                    </button>
+                    <a href="{% url 'transaction_create' %}" class="btn btn-accent flex-fill">
+                        <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                        Add
+                    </a>
+                </div>
             </div>
         </form>
     </div>
@@ -77,10 +87,14 @@
 
 <!-- Transactions Table -->
 <div class="card">
-    <div class="card-body">
+    <div class="card-header">
+        <h3 class="card-title">Transaction History</h3>
+        <span class="badge badge-info">{{ transactions.count }} transactions</span>
+    </div>
+    <div class="card-body p-0">
         {% if transactions %}
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table mb-0">
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -88,26 +102,48 @@
                             <th>Type</th>
                             <th>Amount</th>
                             <th>Note</th>
-                            <th>Actions</th>
+                            <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for transaction in transactions %}
                             <tr>
-                                <td>{{ transaction.date|date:"M d, Y" }}</td>
-                                <td>{{ transaction.category.name }}</td>
                                 <td>
-                                    <span class="badge {% if transaction.type == 'income' %}bg-success{% else %}bg-danger{% endif %}">
-                                        {{ transaction.get_type_display }}
+                                    <div style="font-weight: 500;">{{ transaction.date|date:"M d, Y" }}</div>
+                                    <div style="font-size: 12px; color: var(--text-secondary);">{{ transaction.date|date:"l" }}</div>
+                                </td>
+                                <td>
+                                    <span class="badge {% if transaction.category.type == 'income' %}badge-success{% else %}badge-danger{% endif %}">
+                                        {{ transaction.category.name }}
                                     </span>
                                 </td>
-                                <td class="{% if transaction.type == 'income' %}text-success{% else %}text-danger{% endif %}">
-                                    ${{ transaction.amount|floatformat:2 }}
-                                </td>
-                                <td>{{ transaction.note|default:"-" }}</td>
                                 <td>
-                                    <a href="{% url 'transaction_update' transaction.pk %}" class="btn btn-sm btn-warning">Edit</a>
-                                    <a href="{% url 'transaction_delete' transaction.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                                    <div class="d-flex align-items-center gap-2">
+                                        {% if transaction.type == 'income' %}
+                                            <i data-lucide="trending-up" style="width: 16px; height: 16px; color: var(--success);"></i>
+                                        {% else %}
+                                            <i data-lucide="trending-down" style="width: 16px; height: 16px; color: var(--error);"></i>
+                                        {% endif %}
+                                        <span>{{ transaction.get_type_display }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="font-weight: 600; font-size: 16px; color: {% if transaction.type == 'income' %}var(--success){% else %}var(--error){% endif %};">
+                                        {% if transaction.type == 'income' %}+{% else %}-{% endif %}${{ transaction.amount|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td style="max-width: 200px;">
+                                    <span style="color: var(--text-secondary); font-size: 14px;">{{ transaction.note|default:"—" }}</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <a href="{% url 'transaction_update' transaction.pk %}" class="btn btn-sm btn-outline" title="Edit">
+                                            <i data-lucide="edit" style="width: 14px; height: 14px;"></i>
+                                        </a>
+                                        <a href="{% url 'transaction_delete' transaction.pk %}" class="btn btn-sm btn-danger" title="Delete">
+                                            <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -115,9 +151,23 @@
                 </table>
             </div>
         {% else %}
-            <p class="text-center text-muted py-4">No transactions found. <a href="{% url 'transaction_create' %}">Add your first transaction</a></p>
+            <div class="text-center py-5">
+                <div style="font-size: 64px; margin-bottom: 1rem; opacity: 0.3;">📊</div>
+                <h4 style="color: var(--text-secondary);">No transactions found</h4>
+                <p style="color: var(--text-muted);">Start tracking your finances by adding your first transaction.</p>
+                <a href="{% url 'transaction_create' %}" class="btn btn-primary mt-3">
+                    <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                    Add Transaction
+                </a>
+            </div>
         {% endif %}
     </div>
 </div>
 {% endblock %}
 
+{% block extra_js %}
+<script>
+    // Reinitialize Lucide icons after dynamic content
+    lucide.createIcons();
+</script>
+{% endblock %}

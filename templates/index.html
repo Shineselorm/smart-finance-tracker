@@ -1,46 +1,271 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block content %}
-<div class="p-5 mb-4 bg-light rounded-3">
-  <div class="container-fluid py-5">
-    <h1 class="display-5 fw-bold">Welcome to Smart Personal Finance Tracker</h1>
-    <p class="col-md-8 fs-5">Track your income and expenses, set budgets, and get insights to improve your financial health.</p>
-    {% if user.is_authenticated %}
-      <a class="btn btn-primary btn-lg" href="{% url 'transactions_list' %}">View Transactions</a>
-    {% else %}
-      <a class="btn btn-primary btn-lg" href="{% url 'signup' %}">Get Started</a>
-      <a class="btn btn-outline-primary btn-lg ms-2" href="{% url 'login' %}">Login</a>
-    {% endif %}
-  </div>
-</div>
+{% block page_title %}Dashboard{% endblock %}
 
-<div class="row g-4">
-  <div class="col-md-4">
-    <div class="card h-100 shadow-sm">
-      <div class="card-body">
-        <h5 class="card-title">💰 Transactions</h5>
-        <p class="card-text">Add, edit, and view your income and expenses with detailed categorization.</p>
-      </div>
+{% block content %}
+{% if user.is_authenticated %}
+    <!-- Summary Stats -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-label">Total Income</div>
+                <div class="stat-value text-success">$5,420.00</div>
+                <div class="stat-change positive">
+                    <i data-lucide="trending-up" style="width: 16px; height: 16px;"></i>
+                    +12.5% from last month
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-label">Total Expenses</div>
+                <div class="stat-value text-danger">$3,280.50</div>
+                <div class="stat-change negative">
+                    <i data-lucide="trending-down" style="width: 16px; height: 16px;"></i>
+                    +5.2% from last month
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-label">Balance</div>
+                <div class="stat-value" style="color: var(--primary);">$2,139.50</div>
+                <div class="stat-change positive">
+                    <i data-lucide="dollar-sign" style="width: 16px; height: 16px;"></i>
+                    Available to save
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-  <div class="col-md-4">
-    <div class="card h-100 shadow-sm">
-      <div class="card-body">
-        <h5 class="card-title">📊 Budgets</h5>
-        <p class="card-text">Set spending limits by category and track your budget progress.</p>
-      </div>
+    
+    <!-- Charts Row -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Income vs Expenses</h3>
+                    <select class="form-select" style="width: auto;">
+                        <option>Last 7 days</option>
+                        <option selected>Last 30 days</option>
+                        <option>Last 90 days</option>
+                    </select>
+                </div>
+                <div class="card-body">
+                    <canvas id="incomeExpenseChart" style="max-height: 300px;"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Spending by Category</h3>
+                </div>
+                <div class="card-body">
+                    <canvas id="categoryPieChart" style="max-height: 300px;"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-  <div class="col-md-4">
-    <div class="card h-100 shadow-sm">
-      <div class="card-body">
-        <h5 class="card-title">📈 Insights</h5>
-        <p class="card-text">Get predictions, alerts, and smart recommendations.</p>
-      </div>
+    
+    <!-- Recent Transactions -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Recent Transactions</h3>
+                    <a href="{% url 'transactions_list' %}" class="btn btn-sm btn-outline">View All</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Category</th>
+                                    <th>Description</th>
+                                    <th class="text-right">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Oct 10, 2025</td>
+                                    <td><span class="badge badge-danger">Food</span></td>
+                                    <td>Grocery shopping</td>
+                                    <td class="text-right text-danger">-$85.50</td>
+                                </tr>
+                                <tr>
+                                    <td>Oct 9, 2025</td>
+                                    <td><span class="badge badge-success">Salary</span></td>
+                                    <td>Monthly salary</td>
+                                    <td class="text-right text-success">+$3,500.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Oct 8, 2025</td>
+                                    <td><span class="badge badge-danger">Transport</span></td>
+                                    <td>Gas</td>
+                                    <td class="text-right text-danger">-$45.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-center text-muted mt-3">
+                        <a href="{% url 'transaction_create' %}" class="btn btn-primary">
+                            <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                            Add Transaction
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
+    
+{% else %}
+    <!-- Landing Page for Non-Authenticated Users -->
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-5 text-center">
+            <h1 class="display-4 fw-bold" style="color: var(--primary);">Take Control of Your Finances</h1>
+            <p class="col-md-8 fs-5 mx-auto" style="color: var(--text-secondary);">
+                Track your income and expenses, set budgets, and get insights to improve your financial health.
+            </p>
+            <div class="mt-4">
+                <a class="btn btn-primary btn-lg me-2" href="{% url 'signup' %}">
+                    <i data-lucide="user-plus" style="width: 20px; height: 20px;"></i>
+                    Get Started Free
+                </a>
+                <a class="btn btn-outline btn-lg" href="{% url 'login' %}">
+                    <i data-lucide="log-in" style="width: 20px; height: 20px;"></i>
+                    Login
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div style="font-size: 48px; margin-bottom: 1rem;">💰</div>
+                    <h5 class="card-title">Track Transactions</h5>
+                    <p class="card-text" style="color: var(--text-secondary);">
+                        Easily add, edit, and categorize your income and expenses.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div style="font-size: 48px; margin-bottom: 1rem;">📊</div>
+                    <h5 class="card-title">Set Budgets</h5>
+                    <p class="card-text" style="color: var(--text-secondary);">
+                        Create spending limits and monitor progress with visual indicators.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div style="font-size: 48px; margin-bottom: 1rem;">📈</div>
+                    <h5 class="card-title">Get Insights</h5>
+                    <p class="card-text" style="color: var(--text-secondary);">
+                        Receive predictions, alerts, and smart recommendations.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
 {% endblock %}
 
-
+{% block extra_js %}
+{% if user.is_authenticated %}
+<script>
+    // Income vs Expense Bar Chart
+    const incomeExpenseCtx = document.getElementById('incomeExpenseChart');
+    if (incomeExpenseCtx) {
+        new Chart(incomeExpenseCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Income',
+                    data: [1200, 1800, 950, 2470],
+                    backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                    borderColor: 'rgba(16, 185, 129, 1)',
+                    borderWidth: 2,
+                    borderRadius: 8
+                }, {
+                    label: 'Expenses',
+                    data: [800, 920, 750, 810],
+                    backgroundColor: 'rgba(220, 38, 38, 0.8)',
+                    borderColor: 'rgba(220, 38, 38, 1)',
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: { family: 'Inter', size: 13 },
+                            padding: 15
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    // Category Pie Chart
+    const categoryPieCtx = document.getElementById('categoryPieChart');
+    if (categoryPieCtx) {
+        new Chart(categoryPieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Food', 'Transport', 'Rent', 'Bills', 'Other'],
+                datasets: [{
+                    data: [450, 280, 1200, 350, 200],
+                    backgroundColor: [
+                        '#0E7490',
+                        '#14B8A6',
+                        '#FACC15',
+                        '#F59E0B',
+                        '#6366F1'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { family: 'Inter', size: 12 },
+                            padding: 15
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+{% endif %}
+{% endblock %}

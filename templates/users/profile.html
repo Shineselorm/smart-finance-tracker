@@ -1,44 +1,141 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block page_title %}Profile{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center mt-4">
-    <div class="col-md-8">
-        <h2 class="mb-4">User Profile</h2>
-        
-        <div class="card shadow mb-4">
-            <div class="card-body">
-                <h5 class="card-title">Account Information</h5>
-                <hr>
-                <div class="row mb-3">
-                    <div class="col-md-4"><strong>Username:</strong></div>
-                    <div class="col-md-8">{{ user.username }}</div>
+<div class="row g-4">
+    <div class="col-lg-4">
+        <!-- Profile Card -->
+        <div class="card text-center">
+            <div class="card-body p-4">
+                <div class="user-avatar" style="width: 100px; height: 100px; font-size: 40px; margin: 0 auto 1.5rem;">
+                    {{ user.username|slice:":2"|upper }}
                 </div>
-                <div class="row mb-3">
-                    <div class="col-md-4"><strong>Email:</strong></div>
-                    <div class="col-md-8">{{ user.email }}</div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-4"><strong>Date Joined:</strong></div>
-                    <div class="col-md-8">{{ user.date_joined|date:"F d, Y" }}</div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-4"><strong>Last Login:</strong></div>
-                    <div class="col-md-8">{{ user.last_login|date:"F d, Y g:i A" }}</div>
+                <h3 style="margin-bottom: 0.5rem;">{{ user.username }}</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">{{ user.email }}</p>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'password_change' %}" class="btn btn-primary">
+                        <i data-lucide="key" style="width: 16px; height: 16px;"></i>
+                        Change Password
+                    </a>
                 </div>
             </div>
         </div>
         
-        <div class="card shadow">
+        <!-- Quick Stats -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="card-title">Quick Stats</h5>
+            </div>
             <div class="card-body">
-                <h5 class="card-title">Account Settings</h5>
-                <hr>
-                <a href="{% url 'password_change' %}" class="btn btn-warning">
-                    <i class="bi bi-key"></i> Change Password
-                </a>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <i data-lucide="calendar" style="width: 18px; height: 18px; color: var(--primary);"></i>
+                        <span style="font-size: 14px;">Member Since</span>
+                    </div>
+                    <span style="font-weight: 600;">{{ user.date_joined|date:"M Y" }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <i data-lucide="activity" style="width: 18px; height: 18px; color: var(--success);"></i>
+                        <span style="font-size: 14px;">Last Login</span>
+                    </div>
+                    <span style="font-weight: 600;">{{ user.last_login|date:"M d, Y" }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-8">
+        <!-- Account Information -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Account Information</h3>
+                <button class="btn btn-sm btn-outline">
+                    <i data-lucide="edit" style="width: 14px; height: 14px;"></i>
+                    Edit
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label" style="color: var(--text-secondary); font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em;">Username</label>
+                            <div style="font-size: 16px; font-weight: 500; padding: 0.75rem; background: var(--background); border-radius: var(--radius-sm);">
+                                {{ user.username }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label" style="color: var(--text-secondary); font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em;">Email Address</label>
+                            <div style="font-size: 16px; font-weight: 500; padding: 0.75rem; background: var(--background); border-radius: var(--radius-sm);">
+                                {{ user.email }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label" style="color: var(--text-secondary); font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em;">Date Joined</label>
+                            <div style="font-size: 16px; font-weight: 500; padding: 0.75rem; background: var(--background); border-radius: var(--radius-sm);">
+                                {{ user.date_joined|date:"F d, Y" }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label" style="color: var(--text-secondary); font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em;">Last Login</label>
+                            <div style="font-size: 16px; font-weight: 500; padding: 0.75rem; background: var(--background); border-radius: var(--radius-sm);">
+                                {{ user.last_login|date:"F d, Y g:i A" }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Security Settings -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h3 class="card-title">Security Settings</h3>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center p-3 mb-3" style="background: var(--background); border-radius: var(--radius-sm);">
+                    <div class="d-flex align-items-center gap-3">
+                        <div style="width: 48px; height: 48px; background: rgba(14, 116, 144, 0.1); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;">
+                            <i data-lucide="lock" style="width: 24px; height: 24px; color: var(--primary);"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 0.25rem;">Password</div>
+                            <div style="font-size: 14px; color: var(--text-secondary);">Last changed {{ user.date_joined|date:"M d, Y" }}</div>
+                        </div>
+                    </div>
+                    <a href="{% url 'password_change' %}" class="btn btn-outline">
+                        Change Password
+                    </a>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center p-3" style="background: var(--background); border-radius: var(--radius-sm);">
+                    <div class="d-flex align-items-center gap-3">
+                        <div style="width: 48px; height: 48px; background: rgba(16, 185, 129, 0.1); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;">
+                            <i data-lucide="shield-check" style="width: 24px; height: 24px; color: var(--success);"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 0.25rem;">Account Status</div>
+                            <div style="font-size: 14px; color: var(--text-secondary);">Active and secure</div>
+                        </div>
+                    </div>
+                    <span class="badge badge-success">Active</span>
+                </div>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
 
+{% block extra_js %}
+<script>
+    lucide.createIcons();
+</script>
+{% endblock %}

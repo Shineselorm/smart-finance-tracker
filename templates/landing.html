@@ -11,134 +11,342 @@
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 </head>
 <body>
-    <!-- Top Navigation -->
-    <nav class="landing-nav">
+    <!-- Glassmorphism Navigation -->
+    <nav class="glass-nav" id="navbar">
         <div class="nav-container">
-            <a href="{% url 'home' %}" class="logo">
+            <a href="{% url 'home' %}" class="logo" data-aos="fade-right">
                 <div class="logo-icon">💰</div>
                 <span class="logo-text">FinTracker</span>
             </a>
             
-            <div class="nav-buttons">
-                <a href="{% url 'login' %}" class="btn btn-secondary">
+            <div class="nav-buttons" data-aos="fade-left">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i data-lucide="sun" class="theme-icon"></i>
+                </button>
+                <a href="{% url 'login' %}" class="btn btn-ghost">
                     <i data-lucide="log-in" class="btn-icon"></i>
                     Login
                 </a>
                 <a href="{% url 'signup' %}" class="btn btn-primary">
-                    <i data-lucide="user-plus" class="btn-icon"></i>
-                    Get Started
+                    <i data-lucide="sparkles" class="btn-icon"></i>
+                    Get Started Free
                 </a>
             </div>
         </div>
     </nav>
     
-    <!-- Hero Section -->
+    <!-- Hero Section with Gradient Background -->
     <section class="hero">
+        <!-- Animated Background Shapes -->
+        <div class="hero-bg">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+        
         <div class="hero-container">
-            <h1 class="hero-title">Take Control of Your Finances</h1>
-            <p class="hero-subtitle">
-                Track your income and expenses, set budgets, and get insights to improve your financial health.
-            </p>
-            <div class="hero-actions">
-                <a href="{% url 'signup' %}" class="btn btn-primary btn-lg">
-                    <i data-lucide="user-plus" class="btn-icon"></i>
-                    Get Started Free
-                </a>
-                <a href="{% url 'login' %}" class="btn btn-outline btn-lg">
-                    <i data-lucide="log-in" class="btn-icon"></i>
-                    Login
-                </a>
+            <div class="hero-content" data-aos="fade-up" data-aos-duration="800">
+                <div class="hero-badge">
+                    <i data-lucide="trending-up" style="width: 16px; height: 16px;"></i>
+                    <span>Trusted by 10,000+ users</span>
+                </div>
+                <h1 class="hero-title">
+                    Take Control of 
+                    <span class="gradient-text">Your Finances</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Track expenses, set budgets, and get AI-powered insights to achieve your financial goals. 
+                    Simple, secure, and completely free.
+                </p>
+                <div class="hero-actions">
+                    <a href="{% url 'signup' %}" class="btn btn-primary btn-lg">
+                        <i data-lucide="rocket" class="btn-icon"></i>
+                        Start Free Today
+                    </a>
+                    <a href="#features" class="btn btn-outline btn-lg">
+                        <i data-lucide="play-circle" class="btn-icon"></i>
+                        See How It Works
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <i data-lucide="users" class="stat-icon"></i>
+                        <span class="stat-value">10K+</span>
+                        <span class="stat-label">Active Users</span>
+                    </div>
+                    <div class="stat-item">
+                        <i data-lucide="shield-check" class="stat-icon"></i>
+                        <span class="stat-value">100%</span>
+                        <span class="stat-label">Secure</span>
+                    </div>
+                    <div class="stat-item">
+                        <i data-lucide="zap" class="stat-icon"></i>
+                        <span class="stat-value">Real-time</span>
+                        <span class="stat-label">Insights</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-image" data-aos="fade-left" data-aos-duration="1000">
+                <div class="dashboard-mockup">
+                    <div class="mockup-header">
+                        <div class="mockup-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <div class="mockup-title">Dashboard</div>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="mockup-card">
+                            <div class="card-label">Total Balance</div>
+                            <div class="card-value">$12,450.00</div>
+                            <div class="card-trend positive">
+                                <i data-lucide="trending-up" style="width: 14px; height: 14px;"></i>
+                                +12.5%
+                            </div>
+                        </div>
+                        <div class="mockup-chart"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
+    
+    <!-- Wave Divider -->
+    <div class="wave-divider">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+        </svg>
+    </div>
     
     <!-- Features Section -->
-    <section class="features">
+    <section class="features" id="features">
         <div class="features-container">
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i data-lucide="wallet" class="icon-lg"></i>
-                </div>
-                <h3 class="feature-title">Track Transactions</h3>
-                <p class="feature-description">
-                    Easily add, edit, and categorize your income and expenses with detailed categorization.
-                </p>
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">Everything You Need to <span class="gradient-text">Manage Money</span></h2>
+                <p class="section-subtitle">Powerful features designed to simplify your financial life</p>
             </div>
             
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i data-lucide="trending-up" class="icon-lg"></i>
+            <div class="features-grid">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon-wrapper">
+                        <i data-lucide="wallet" class="feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Smart Transaction Tracking</h3>
+                    <p class="feature-description">
+                        Automatically categorize and track every transaction. Get instant insights into your spending patterns.
+                    </p>
+                    <a href="{% url 'signup' %}" class="feature-link">
+                        Learn more <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+                    </a>
                 </div>
-                <h3 class="feature-title">Set Budgets</h3>
-                <p class="feature-description">
-                    Create spending limits by category and monitor progress with visual indicators.
-                </p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i data-lucide="bar-chart-3" class="icon-lg"></i>
+                
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon-wrapper">
+                        <i data-lucide="target" class="feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Budget Goals & Alerts</h3>
+                    <p class="feature-description">
+                        Set custom budgets for any category. Get real-time alerts when you're approaching your limits.
+                    </p>
+                    <a href="{% url 'signup' %}" class="feature-link">
+                        Learn more <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+                    </a>
                 </div>
-                <h3 class="feature-title">Get Insights</h3>
-                <p class="feature-description">
-                    Receive predictions, alerts, and smart recommendations to improve your financial health.
-                </p>
+                
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon-wrapper">
+                        <i data-lucide="bar-chart-3" class="feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">AI-Powered Insights</h3>
+                    <p class="feature-description">
+                        Receive personalized recommendations and predictions to optimize your financial decisions.
+                    </p>
+                    <a href="{% url 'signup' %}" class="feature-link">
+                        Learn more <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+                    </a>
+                </div>
+                
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon-wrapper">
+                        <i data-lucide="shield" class="feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Bank-Level Security</h3>
+                    <p class="feature-description">
+                        Your data is encrypted and protected with industry-standard security protocols.
+                    </p>
+                    <a href="{% url 'signup' %}" class="feature-link">
+                        Learn more <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+                    </a>
+                </div>
+                
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon-wrapper">
+                        <i data-lucide="smartphone" class="feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Access Anywhere</h3>
+                    <p class="feature-description">
+                        Manage your finances on any device. Seamless sync across desktop, tablet, and mobile.
+                    </p>
+                    <a href="{% url 'signup' %}" class="feature-link">
+                        Learn more <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+                    </a>
+                </div>
+                
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon-wrapper">
+                        <i data-lucide="pie-chart" class="feature-icon"></i>
+                    </div>
+                    <h3 class="feature-title">Visual Reports</h3>
+                    <p class="feature-description">
+                        Beautiful charts and graphs that make understanding your finances effortless.
+                    </p>
+                    <a href="{% url 'signup' %}" class="feature-link">
+                        Learn more <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
     
-    <!-- Stats Section -->
-    <section class="stats">
-        <div class="stats-container">
-            <div class="stat-item">
-                <div class="stat-value">100%</div>
-                <div class="stat-label">Free Forever</div>
+    <!-- Stats/Benefits Section -->
+    <section class="benefits">
+        <div class="benefits-bg">
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+        <div class="benefits-container">
+            <div class="benefit-item" data-aos="zoom-in" data-aos-delay="100">
+                <div class="benefit-icon">
+                    <i data-lucide="gift" class="icon-xl"></i>
+                </div>
+                <h3 class="benefit-title">100% Free Forever</h3>
+                <p class="benefit-text">No hidden fees, no premium tiers. All features included.</p>
             </div>
-            <div class="stat-item">
-                <div class="stat-value">24/7</div>
-                <div class="stat-label">Access Anytime</div>
+            
+            <div class="benefit-item" data-aos="zoom-in" data-aos-delay="200">
+                <div class="benefit-icon">
+                    <i data-lucide="lock" class="icon-xl"></i>
+                </div>
+                <h3 class="benefit-title">Bank-Grade Security</h3>
+                <p class="benefit-text">256-bit encryption keeps your data safe and private.</p>
             </div>
-            <div class="stat-item">
-                <div class="stat-value">Secure</div>
-                <div class="stat-label">Data Protected</div>
+            
+            <div class="benefit-item" data-aos="zoom-in" data-aos-delay="300">
+                <div class="benefit-icon">
+                    <i data-lucide="zap" class="icon-xl"></i>
+                </div>
+                <h3 class="benefit-title">Real-Time Insights</h3>
+                <p class="benefit-text">Instant updates and notifications on your spending.</p>
             </div>
         </div>
     </section>
+    
+    <!-- Wave Divider -->
+    <div class="wave-divider wave-inverted">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+        </svg>
+    </div>
     
     <!-- CTA Section -->
     <section class="cta">
-        <div class="cta-container">
-            <h2 class="cta-title">Ready to take control?</h2>
-            <p class="cta-subtitle">Join thousands of users managing their finances smarter</p>
-            <a href="{% url 'signup' %}" class="btn btn-primary btn-lg">
+        <div class="cta-container" data-aos="fade-up">
+            <h2 class="cta-title">Ready to Transform Your <span class="gradient-text">Financial Future?</span></h2>
+            <p class="cta-subtitle">Join thousands of users who've taken control of their money</p>
+            <a href="{% url 'signup' %}" class="btn btn-primary btn-xl">
                 <i data-lucide="rocket" class="btn-icon"></i>
-                Start Your Journey
+                Get Started - It's Free
             </a>
+            <p class="cta-note">No credit card required • Setup in 2 minutes</p>
         </div>
     </section>
     
     <!-- Footer -->
-    <footer class="landing-footer">
+    <footer class="footer">
         <div class="footer-container">
             <div class="footer-content">
-                <div class="footer-logo">
-                    <div class="logo-icon">💰</div>
-                    <span class="logo-text">FinTracker</span>
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="logo-icon">💰</div>
+                        <span class="logo-text">FinTracker</span>
+                    </div>
+                    <p class="footer-tagline">Smart Personal Finance Management</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="GitHub">
+                            <i data-lucide="github"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i data-lucide="twitter"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <i data-lucide="linkedin"></i>
+                        </a>
+                    </div>
                 </div>
-                <p class="footer-text">Smart Personal Finance Management</p>
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4 class="footer-heading">Product</h4>
+                        <ul>
+                            <li><a href="#features">Features</a></li>
+                            <li><a href="{% url 'signup' %}">Pricing</a></li>
+                            <li><a href="#">Security</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4 class="footer-heading">Company</h4>
+                        <ul>
+                            <li><a href="#">About</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4 class="footer-heading">Legal</h4>
+                        <ul>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                            <li><a href="#">Cookie Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
+            
             <div class="footer-bottom">
-                <p>&copy; 2025 FinTracker. Built with Django.</p>
+                <p>&copy; 2025 FinTracker. All rights reserved. Built with Django.</p>
             </div>
         </div>
     </footer>
+    
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
+        <i data-lucide="arrow-up"></i>
+    </button>
     
     <!-- Initialize Lucide Icons -->
     <script>
         lucide.createIcons();
     </script>
+    
+    <!-- Initialize AOS -->
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+    </script>
+    
+    <!-- Custom JavaScript -->
+    <script src="{% static 'js/landing.js' %}"></script>
 </body>
 </html>
-

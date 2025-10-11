@@ -9,7 +9,7 @@
     <div class="col-md-4">
         <div class="stat-card bg-success text-white">
             <div class="stat-label" style="color: rgba(255, 255, 255, 0.9);">Total Income</div>
-            <div class="stat-value text-white">${{ total_income|floatformat:2 }}</div>
+            <div class="stat-value text-white">GH₵{{ total_income|floatformat:2 }}</div>
             <div class="d-flex align-items-center gap-1 mt-2" style="font-size: 14px; opacity: 0.9;">
                 <i data-lucide="trending-up" style="width: 16px; height: 16px;"></i>
                 <span>All time</span>
@@ -19,7 +19,7 @@
     <div class="col-md-4">
         <div class="stat-card" style="background: var(--error); color: white;">
             <div class="stat-label" style="color: rgba(255, 255, 255, 0.9);">Total Expenses</div>
-            <div class="stat-value text-white">${{ total_expense|floatformat:2 }}</div>
+            <div class="stat-value text-white">GH₵{{ total_expense|floatformat:2 }}</div>
             <div class="d-flex align-items-center gap-1 mt-2" style="font-size: 14px; opacity: 0.9;">
                 <i data-lucide="trending-down" style="width: 16px; height: 16px;"></i>
                 <span>All time</span>
@@ -29,7 +29,7 @@
     <div class="col-md-4">
         <div class="stat-card" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white;">
             <div class="stat-label" style="color: rgba(255, 255, 255, 0.9);">Net Balance</div>
-            <div class="stat-value text-white">${{ balance|floatformat:2 }}</div>
+            <div class="stat-value text-white">GH₵{{ balance|floatformat:2 }}</div>
             <div class="d-flex align-items-center gap-1 mt-2" style="font-size: 14px; opacity: 0.9;">
                 <i data-lucide="wallet" style="width: 16px; height: 16px;"></i>
                 <span>Current balance</span>
@@ -129,7 +129,7 @@
                                 </td>
                                 <td>
                                     <span style="font-weight: 600; font-size: 16px; color: {% if transaction.type == 'income' %}var(--success){% else %}var(--error){% endif %};">
-                                        {% if transaction.type == 'income' %}+{% else %}-{% endif %}${{ transaction.amount|floatformat:2 }}
+                                        {% if transaction.type == 'income' %}+{% else %}-{% endif %}GH₵{{ transaction.amount|floatformat:2 }}
                                     </span>
                                 </td>
                                 <td style="max-width: 200px;">

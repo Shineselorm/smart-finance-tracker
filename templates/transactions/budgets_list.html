@@ -44,7 +44,7 @@
                         <div class="mb-3">
                             <div class="d-flex justify-content-between mb-2">
                                 <span style="font-size: 14px; color: var(--text-secondary);">Spent</span>
-                                <span style="font-size: 14px; font-weight: 600;">${{ data.spent|floatformat:2 }} / ${{ data.budget.limit_amount|floatformat:2 }}</span>
+                                <span style="font-size: 14px; font-weight: 600;">GH₵{{ data.spent|floatformat:2 }} / GH₵{{ data.budget.limit_amount|floatformat:2 }}</span>
                             </div>
                             <div class="progress" style="height: 16px;">
                                 <div class="progress-bar {% if data.over_budget %}danger{% elif data.percentage > 80 %}warning{% endif %}" 
@@ -62,12 +62,12 @@
                             {% if data.over_budget %}
                                 <div class="d-flex align-items-center gap-2" style="color: var(--error);">
                                     <i data-lucide="alert-triangle" style="width: 18px; height: 18px;"></i>
-                                    <span style="font-weight: 600; font-size: 15px;">Over by ${{ data.remaining|floatformat:2|cut:"-" }}</span>
+                                    <span style="font-weight: 600; font-size: 15px;">Over by GH₵{{ data.remaining|floatformat:2|cut:"-" }}</span>
                                 </div>
                             {% else %}
                                 <div class="d-flex align-items-center gap-2" style="color: var(--success);">
                                     <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i>
-                                    <span style="font-weight: 600; font-size: 15px;">${{ data.remaining|floatformat:2 }} left</span>
+                                    <span style="font-weight: 600; font-size: 15px;">GH₵{{ data.remaining|floatformat:2 }} left</span>
                                 </div>
                             {% endif %}
                         </div>

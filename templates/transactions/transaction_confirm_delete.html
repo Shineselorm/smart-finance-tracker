@@ -13,7 +13,7 @@
                     <strong>Transaction Details:</strong><br>
                     Category: {{ transaction.category.name }}<br>
                     Type: {{ transaction.get_type_display }}<br>
-                    Amount: ${{ transaction.amount }}<br>
+                    Amount: GH₵{{ transaction.amount }}<br>
                     Date: {{ transaction.date|date:"M d, Y" }}<br>
                     {% if transaction.note %}Note: {{ transaction.note }}{% endif %}
                 </div>

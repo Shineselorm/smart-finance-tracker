@@ -51,6 +51,10 @@
                             <i data-lucide="wallet" class="nav-icon"></i>
                             <span>Budgets</span>
                         </a>
+                        <a href="{% url 'insights_dashboard' %}" class="nav-link {% if 'insights' in request.path %}active{% endif %}">
+                            <i data-lucide="lightbulb" class="nav-icon"></i>
+                            <span>Insights</span>
+                        </a>
                     </div>
                     
                     <div class="nav-section">

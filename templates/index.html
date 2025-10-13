@@ -10,27 +10,27 @@
         <div class="col-md-4">
             <div class="stat-card">
                 <div class="stat-label">Total Income</div>
-                <div class="stat-value text-success">GH₵5,420.00</div>
+                <div class="stat-value text-success">GH₵{{ total_income|floatformat:2|default:"0.00" }}</div>
                 <div class="stat-change positive">
                     <i data-lucide="trending-up" style="width: 16px; height: 16px;"></i>
-                    +12.5% from last month
+                    All-time earnings
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="stat-card">
                 <div class="stat-label">Total Expenses</div>
-                <div class="stat-value text-danger">GH₵3,280.50</div>
+                <div class="stat-value text-danger">GH₵{{ total_expense|floatformat:2|default:"0.00" }}</div>
                 <div class="stat-change negative">
                     <i data-lucide="trending-down" style="width: 16px; height: 16px;"></i>
-                    +5.2% from last month
+                    All-time spending
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="stat-card">
                 <div class="stat-label">Balance</div>
-                <div class="stat-value" style="color: var(--primary);">GH₵2,139.50</div>
+                <div class="stat-value" style="color: var(--primary);">GH₵{{ balance|floatformat:2|default:"0.00" }}</div>
                 <div class="stat-change positive">
                     <i data-lucide="dollar-sign" style="width: 16px; height: 16px;"></i>
                     Available to save
@@ -89,24 +89,28 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Oct 10, 2025</td>
-                                    <td><span class="badge badge-danger">Food</span></td>
-                                    <td>Grocery shopping</td>
-                                    <td class="text-right text-danger">-GH₵85.50</td>
-                                </tr>
-                                <tr>
-                                    <td>Oct 9, 2025</td>
-                                    <td><span class="badge badge-success">Salary</span></td>
-                                    <td>Monthly salary</td>
-                                    <td class="text-right text-success">+GH₵3,500.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Oct 8, 2025</td>
-                                    <td><span class="badge badge-danger">Transport</span></td>
-                                    <td>Gas</td>
-                                    <td class="text-right text-danger">-GH₵45.00</td>
-                                </tr>
+                                {% if recent_transactions %}
+                                    {% for transaction in recent_transactions %}
+                                    <tr>
+                                        <td>{{ transaction.date|date:"M d, Y" }}</td>
+                                        <td>
+                                            {% if transaction.category %}
+                                                <span class="badge badge-{{ transaction.type }}">{{ transaction.category.name }}</span>
+                                            {% else %}
+                                                <span class="badge badge-secondary">Uncategorized</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ transaction.note|default:"No description" }}</td>
+                                        <td class="text-right {% if transaction.type == 'income' %}text-success{% else %}text-danger{% endif %}">
+                                            {% if transaction.type == 'income' %}+{% else %}-{% endif %}GH₵{{ transaction.amount|floatformat:2 }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">No transactions yet. Start by adding one!</td>
+                                    </tr>
+                                {% endif %}
                             </tbody>
                         </table>
                     </div>
@@ -183,23 +187,25 @@
 {% block extra_js %}
 {% if user.is_authenticated %}
 <script>
-    // Income vs Expense Bar Chart
+    // Income vs Expense Bar Chart with real data
     const incomeExpenseCtx = document.getElementById('incomeExpenseChart');
     if (incomeExpenseCtx) {
+        const weeklyData = {{ weekly_data|safe }};
+        
         new Chart(incomeExpenseCtx, {
             type: 'bar',
             data: {
-                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                labels: weeklyData.map(d => d.week),
                 datasets: [{
                     label: 'Income',
-                    data: [1200, 1800, 950, 2470],
+                    data: weeklyData.map(d => d.income),
                     backgroundColor: 'rgba(16, 185, 129, 0.8)',
                     borderColor: 'rgba(16, 185, 129, 1)',
                     borderWidth: 2,
                     borderRadius: 8
                 }, {
                     label: 'Expenses',
-                    data: [800, 920, 750, 810],
+                    data: weeklyData.map(d => d.expense),
                     backgroundColor: 'rgba(220, 38, 38, 0.8)',
                     borderColor: 'rgba(220, 38, 38, 1)',
                     borderWidth: 2,
@@ -223,7 +229,7 @@
                         beginAtZero: true,
                         ticks: {
                             callback: function(value) {
-                                return 'GH₵' + value;
+                                return 'GH₵' + value.toFixed(2);
                             }
                         }
                     }
@@ -232,22 +238,23 @@
         });
     }
     
-    // Category Pie Chart
+    // Category Pie Chart with real data
     const categoryPieCtx = document.getElementById('categoryPieChart');
     if (categoryPieCtx) {
+        const categoryData = {{ category_data|safe }};
+        
+        // Default colors if no data
+        const defaultColors = ['#0E7490', '#14B8A6', '#FACC15', '#F59E0B', '#6366F1', '#EC4899', '#8B5CF6'];
+        
         new Chart(categoryPieCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Food', 'Transport', 'Rent', 'Bills', 'Other'],
+                labels: categoryData.length > 0 ? categoryData.map(d => d.name) : ['No data'],
                 datasets: [{
-                    data: [450, 280, 1200, 350, 200],
-                    backgroundColor: [
-                        '#0E7490',
-                        '#14B8A6',
-                        '#FACC15',
-                        '#F59E0B',
-                        '#6366F1'
-                    ],
+                    data: categoryData.length > 0 ? categoryData.map(d => d.amount) : [1],
+                    backgroundColor: categoryData.length > 0 ? 
+                        defaultColors.slice(0, categoryData.length) : 
+                        ['#E5E7EB'],
                     borderWidth: 0
                 }]
             },

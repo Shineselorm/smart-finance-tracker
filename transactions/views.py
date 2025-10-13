@@ -9,8 +9,72 @@ from .forms import TransactionForm, CategoryForm, BudgetForm
 
 def home(request):
     if request.user.is_authenticated:
-        # Authenticated users see dashboard
-        return render(request, 'index.html')
+        # Authenticated users see dashboard with real data
+        import json
+        from datetime import datetime, timedelta
+        
+        # Calculate summary stats
+        transactions = Transaction.objects.filter(user=request.user)
+        total_income = transactions.filter(type='income').aggregate(Sum('amount'))['amount__sum'] or 0
+        total_expense = transactions.filter(type='expense').aggregate(Sum('amount'))['amount__sum'] or 0
+        balance = total_income - total_expense
+        
+        # Get current month data for charts
+        now = datetime.now()
+        current_month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        
+        # Monthly income vs expenses (last 4 weeks)
+        weekly_data = []
+        for i in range(4):
+            week_start = current_month_start - timedelta(weeks=3-i)
+            week_end = week_start + timedelta(days=7)
+            
+            week_income = transactions.filter(
+                type='income',
+                date__gte=week_start,
+                date__lt=week_end
+            ).aggregate(Sum('amount'))['amount__sum'] or 0
+            
+            week_expense = transactions.filter(
+                type='expense',
+                date__gte=week_start,
+                date__lt=week_end
+            ).aggregate(Sum('amount'))['amount__sum'] or 0
+            
+            weekly_data.append({
+                'week': f'Week {i+1}',
+                'income': float(week_income),
+                'expense': float(week_expense)
+            })
+        
+        # Category breakdown
+        categories = Category.objects.filter(type='expense')
+        category_data = []
+        for category in categories:
+            amount = transactions.filter(
+                type='expense',
+                category=category
+            ).aggregate(Sum('amount'))['amount__sum'] or 0
+            
+            if amount > 0:
+                category_data.append({
+                    'name': category.name,
+                    'amount': float(amount)
+                })
+        
+        # Recent transactions
+        recent_transactions = transactions.order_by('-date', '-created_at')[:5]
+        
+        context = {
+            'total_income': total_income,
+            'total_expense': total_expense,
+            'balance': balance,
+            'weekly_data': json.dumps(weekly_data),
+            'category_data': json.dumps(category_data),
+            'recent_transactions': recent_transactions,
+        }
+        
+        return render(request, 'index.html', context)
     else:
         # Non-authenticated users see landing page
         return render(request, 'landing.html')

@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Financial Insights{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 style="color: var(--text-primary); font-weight: 600;">Financial Insights</h2>
+            <p class="text-muted">Smart predictions and recommendations based on your spending patterns</p>
+        </div>
+        <div>
+            <span class="badge bg-primary">{{ unread_count }} new</span>
+        </div>
+    </div>
+
+    <!-- Alerts Section -->
+    {% if alerts %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="card-title mb-0">
+                        <i data-lucide="alert-triangle" style="width: 20px; height: 20px;"></i>
+                        Budget Alerts
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {% for alert in alerts %}
+                    <div class="alert alert-danger d-flex justify-content-between align-items-start mb-3">
+                        <div class="flex-grow-1">
+                            <h5 class="alert-heading">{{ alert.title }}</h5>
+                            <p class="mb-0">{{ alert.message }}</p>
+                            <small class="text-muted">{{ alert.created_at|date:"M d, Y h:i A" }}</small>
+                        </div>
+                        <div>
+                            <a href="{% url 'delete_insight' alert.pk %}" class="btn btn-sm btn-outline-danger" 
+                               onclick="return confirm('Delete this alert?')">
+                                <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Main Insights Grid -->
+    <div class="row g-4">
+        <!-- Spending Predictions -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i data-lucide="trending-up" style="width: 20px; height: 20px;"></i>
+                        Spending Predictions
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {% if predictions %}
+                        {% for prediction in predictions %}
+                        <div class="insight-card mb-3 p-3" style="background: var(--card-bg); border-radius: 8px; border-left: 4px solid var(--primary);">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5 style="color: var(--text-primary);">{{ prediction.title }}</h5>
+                                    <p class="mb-2">{{ prediction.message }}</p>
+                                    {% if prediction.amount %}
+                                    <div class="stat-value" style="color: var(--primary); font-size: 24px;">
+                                        GH₵{{ prediction.amount|floatformat:2 }}
+                                    </div>
+                                    {% endif %}
+                                    <small class="text-muted">{{ prediction.created_at|date:"M d, Y" }}</small>
+                                </div>
+                                <a href="{% url 'mark_insight_read' prediction.pk %}" class="btn btn-sm btn-outline-primary">
+                                    <i data-lucide="check" style="width: 14px; height: 14px;"></i>
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted text-center">
+                            <i data-lucide="info" style="width: 48px; height: 48px; margin-bottom: 10px;"></i><br>
+                            Not enough data yet. Add more transactions to get predictions.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Investment Recommendations -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i data-lucide="dollar-sign" style="width: 20px; height: 20px;"></i>
+                        Investment Recommendations
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {% if recommendations %}
+                        {% for rec in recommendations %}
+                        <div class="insight-card mb-3 p-3" style="background: var(--card-bg); border-radius: 8px; border-left: 4px solid #14B8A6;">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5 style="color: var(--text-primary);">{{ rec.title }}</h5>
+                                    <p class="mb-2">{{ rec.message }}</p>
+                                    {% if rec.amount %}
+                                    <div class="stat-value" style="color: #14B8A6; font-size: 24px;">
+                                        GH₵{{ rec.amount|floatformat:2 }}
+                                    </div>
+                                    {% endif %}
+                                    <small class="text-muted">{{ rec.created_at|date:"M d, Y" }}</small>
+                                </div>
+                                <a href="{% url 'mark_insight_read' rec.pk %}" class="btn btn-sm btn-outline-success">
+                                    <i data-lucide="check" style="width: 14px; height: 14px;"></i>
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted text-center">
+                            <i data-lucide="info" style="width: 48px; height: 48px; margin-bottom: 10px;"></i><br>
+                            Add income and expenses to get personalized recommendations.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Financial Tips Section -->
+    {% if tips %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i data-lucide="lightbulb" style="width: 20px; height: 20px;"></i>
+                        Financial Tips
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        {% for tip in tips %}
+                        <div class="col-md-6">
+                            <div class="p-3" style="background: var(--bg-secondary); border-radius: 8px;">
+                                <h5 style="color: var(--text-primary);">{{ tip.title }}</h5>
+                                <p class="mb-0">{{ tip.message }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Empty State -->
+    {% if not predictions and not alerts and not recommendations and not tips %}
+    <div class="text-center py-5">
+        <i data-lucide="pie-chart" style="width: 64px; height: 64px; color: var(--text-secondary); margin-bottom: 20px;"></i>
+        <h3 style="color: var(--text-primary);">No insights yet</h3>
+        <p class="text-muted mb-4">Start adding transactions to generate personalized financial insights.</p>
+        <a href="{% url 'transaction_create' %}" class="btn btn-primary">
+            <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+            Add Transaction
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // Initialize Lucide icons
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+</script>
+{% endblock %}
+

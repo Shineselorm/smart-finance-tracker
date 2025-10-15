@@ -257,7 +257,7 @@ python manage.py test --verbosity=2
 7. Run migrations: `heroku run python manage.py migrate`
 8. Create superuser: `heroku run python manage.py createsuperuser`
 
-## 🔒 Security Notes
+##  Security Notes
 
 - Change `SECRET_KEY` in production
 - Set `DEBUG=False` in production

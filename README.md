@@ -64,11 +64,6 @@ A comprehensive web-based Django application for managing personal finances with
 - **Charts:** Chart.js
 - **Animations:** AOS (Animate On Scroll), CSS transitions
 
-### Deployment
-- **WSGI Server:** Gunicorn
-- **Static Files:** WhiteNoise
-- **Database Adapter:** dj-database-url, psycopg2
-- **Platform-ready:** Heroku, Render, Railway
 
 ## 🚀 Quick Start
 
@@ -280,9 +275,6 @@ Contributions are welcome! Please follow these steps:
 4. Push to the branch: `git push origin feature-name`
 5. Open a Pull Request
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 👤 Author
 
@@ -306,4 +298,4 @@ For support or questions, please open an issue on the [GitHub repository](https:
 
 **Note:** This project was developed as part of the ALX Backend Development capstone project.
 
-Made with ❤️ by Selorm Sedzi
+Made with ❤️ by Shine Selorm Sedziafa

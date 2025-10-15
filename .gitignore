@@ -38,6 +38,23 @@ staticfiles/
 db.sqlite3
 media/
 
+# Environment variables and secrets
+.env
+.env.local
+.env.production
+.env.staging
+secrets.json
+config.json
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Production settings
+production_settings.py
+local_settings.py
+
 # IDE/editor
 .vscode/
 .idea/
